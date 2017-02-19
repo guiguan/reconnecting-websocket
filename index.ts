@@ -1,11 +1,12 @@
 type Options = {
-    constructor?: new(url: string, protocols?: string | string[]) => WebSocket;
+    constructor?: new(url: string, protocols?: string | string[], options?: any) => WebSocket;
     maxReconnectionDelay?: number;
     minReconnectionDelay?: number;
     reconnectionDelayGrowFactor?: number;
     connectionTimeout?: number;
     maxRetries?: number;
     debug?: boolean;
+    options: any;
 };
 
 const isWebSocket = constructor =>
@@ -22,6 +23,7 @@ const getDefaultOptions = () => <Options>({
     connectionTimeout: 4000,
     maxRetries: Infinity,
     debug: false,
+    options: {},
 });
 
 const bypassProperty = (src, dst, name: string) => {
@@ -124,7 +126,7 @@ const ReconnectingWebsocket = function(
     const connect = () => {
         log('connect');
         const oldWs = ws;
-        ws = new (<any>config.constructor)(url, protocols);
+        ws = new (<any>config.constructor)(url, protocols, config.options);
 
         connectingTimeout = setTimeout(() => {
             log('timeout');

@@ -13,6 +13,7 @@ var getDefaultOptions = function () { return ({
     connectionTimeout: 4000,
     maxRetries: Infinity,
     debug: false,
+    options: {},
 }); };
 var bypassProperty = function (src, dst, name) {
     Object.defineProperty(dst, name, {
@@ -111,7 +112,7 @@ var ReconnectingWebsocket = function (url, protocols, options) {
     var connect = function () {
         log('connect');
         var oldWs = ws;
-        ws = new config.constructor(url, protocols);
+        ws = new config.constructor(url, protocols, config.options);
         connectingTimeout = setTimeout(function () {
             log('timeout');
             ws.close();
